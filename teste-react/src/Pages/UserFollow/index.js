@@ -14,7 +14,7 @@ export default function UserFollow(){
   const url=window.location.pathname
   const urlIndex=url.slice(1).search('/')
   const follower=url.slice(0,urlIndex+1)
-
+  
   const path=follower
   const history=useHistory()
   const saveUser=()=>{

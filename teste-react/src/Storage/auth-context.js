@@ -29,6 +29,7 @@ export const AuthContextProvider = (props) => {
 
   useEffect(()=>{
     const user=localStorage.getItem('user')
+    const otherUser=localStorage.getItem('otherUser')
     const loggedIn = localStorage.getItem('isLoggedIn');
     if (loggedIn) {
       const path='/users/'+user
@@ -70,6 +71,18 @@ export const AuthContextProvider = (props) => {
           console.error(error)
           
         })  
+        if(otherUser){
+          const pathOtherUser='/users/'+otherUser
+          api.get(pathOtherUser)
+          .then((response) => {
+            //console.log(response.data)
+            setUserFollow(response.data)
+          })
+          .catch((error) => {
+            console.error(error)
+            
+          }) 
+        }
     }
     else{
       console.log('deslogado')
@@ -93,6 +106,7 @@ export const AuthContextProvider = (props) => {
   }
 
   async function getFollowInfo(user){
+    localStorage.setItem('otherUser',user)
     const path='/users/'+user
     api.get(path)
       .then((response) => {
@@ -111,6 +125,7 @@ export const AuthContextProvider = (props) => {
         //console.log(response.data)
         setData(response.data)
         localStorage.setItem('user', user);
+        localStorage.removeItem('otherUser');
         setFollowers({})
         setFollowing({})
         setUserFollow({})
@@ -125,6 +140,8 @@ export const AuthContextProvider = (props) => {
   
   const logoutHandler = () => {
     localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('user');
+    localStorage.removeItem('otherUser');
     setIsLoggedIn(false);
     setFollowers({})
     setFollowing({})
